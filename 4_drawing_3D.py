@@ -2,11 +2,13 @@ import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
+import numpy as np
+import math
 
 WINDOW_WIDTH = 640
 WINDOW_HEIGHT = 480
 
-lx = 1.0
+lx = 0.2
 
 VERTEXES = [
     [-lx, lx, lx],   # A
@@ -18,6 +20,16 @@ VERTEXES = [
     [lx, -lx, -lx],   # G
     [-lx, -lx, -lx],   # H
 ]
+
+VERTEXES_2 = np.array(VERTEXES) - 1.4
+
+Matrix_Rz = [[math.cos(math.radians(30)), -math.sin(math.radians(30)), 0],
+            [math.sin(math.radians(30)), math.cos(math.radians(30)), 0],
+            [0, 0, 1]]
+
+VERTEXES_2 = np.matmul(VERTEXES_2, Matrix_Rz)
+
+VERTEXES_2 = VERTEXES_2.tolist()
 
 EDGES = [
     [0, 1],
@@ -73,6 +85,7 @@ def main():
         
         glLoadIdentity()
         gluLookAt(3.0, 4.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+        # glTranslated(1.0, 0.0, 0.0)
         glRotated(r, 0.0, 1.0, 0.0)
         r += 1
         if r > 360: r=0
@@ -84,6 +97,29 @@ def main():
                 # glVertex3d(VERTEXES[vx][0], VERTEXES[vx][1], VERTEXES[vx][2])
                 glVertex3dv(VERTEXES[vx])
         glEnd()
+
+        glBegin(GL_LINES)
+        glColor3d(1.0, 0.0, 0.0)
+        glVertex3d(-10.0, 0.0, 0.0)
+        glVertex3d(10.0, 0.0, 0.0)
+
+        glColor3d(0.0, 1.0, 0.0)
+        glVertex3d(0.0, -10.0, 0.0)
+        glVertex3d(0.0, 10.0, 0.0)
+
+        glColor3d(0.0, 0.0, 1.0)
+        glVertex3d(0.0, 0.0, -10.0)
+        glVertex3d(0.0, 0.0, 10.0)
+        glEnd()
+
+        glBegin(GL_LINES)
+        glColor3d(0.0, 0.0, 0.0)
+        for edge in EDGES:
+            for vx in edge:
+                # glVertex3d(VERTEXES[vx][0], VERTEXES[vx][1], VERTEXES[vx][2])
+                glVertex3dv(VERTEXES_2[vx])
+        glEnd()
+
         glFlush()
 
 

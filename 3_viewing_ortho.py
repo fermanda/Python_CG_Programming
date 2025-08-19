@@ -3,21 +3,26 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 480
+
+def projection_matrix(w, h):
+    # glViewport(0, 0, w, h)
+    glLoadIdentity()
+    glOrtho(-w/200, w/200, -h/200, h/200, 0.0, 10.0)
+
 def main():
-    # Initialize the library
     if not glfw.init():
         return
-    
-    # Create a windowed mode window and its OpenGL context
+
     window = glfw.create_window(640, 480, "Hello World", None, None)
     if not window:
         glfw.terminate()
         return
     
-    # Make the window's context current
     glfw.make_context_current(window)
+    projection_matrix(WINDOW_WIDTH, WINDOW_HEIGHT)
     
-    # Loop until the user closes the window
     while not glfw.window_should_close(window):
         # Render here, e.g. using pyOpenGL
         glClearColor(0.8, 0.8, 0.8, 1.0)
@@ -25,19 +30,23 @@ def main():
 
         glBegin(GL_POLYGON)
         glColor3d(1.0, 1.0, 0.0)
-        glVertex2d(-0.4, -0.4)
-        glVertex2d(0.4, -0.4)
-        glVertex2d(0.4, 0.4)
-        glVertex2d(-0.4, 0.4)
+        glVertex3d(-0.8, 0.3, -2.0)
+        glVertex3d(-0.2, 0.3, -2.0)
+        glVertex3d(-0.2, -0.3, -2.0)
+        glVertex3d(-0.8, -0.3, -2.0)
+        glEnd()
+
+        glBegin(GL_POLYGON)
+        glColor3d(0.0, 1.0, 1.0)
+        glVertex3d(0.2, 0.3, 0.0)
+        glVertex3d(0.8, 0.3, 0.0)
+        glVertex3d(0.8, -0.3, 0.0)
+        glVertex3d(0.2, -0.3, 0.0)
         glEnd()
 
         glFlush()
 
-
-        # Swap front and back buffers
         glfw.swap_buffers(window)
-
-        # Poll for and process events
         glfw.poll_events()
 
     glfw.terminate()
